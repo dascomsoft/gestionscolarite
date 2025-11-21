@@ -1,0 +1,55 @@
+name: Build Windows Installer
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [ published ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: |
+          frontend/package-lock.json
+          server/package-lock.json
+          
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+      
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build
+      
+    - name: Install server dependencies
+      run: |
+        cd server
+        npm ci
+      
+    - name: Build Electron for Windows
+      run: |
+        cd server
+        npm run build-win
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Upload Windows Installer
+      uses: actions/upload-artifact@v4
+      with:
+        name: GestionScolarite-Windows
+        path: server/dist-electron/*.exe
+        retention-days: 30
