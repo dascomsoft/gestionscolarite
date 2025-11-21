@@ -10,12 +10,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Application de gestion scolaire avec Electron",
   "dependencies": {
-    "sqlite3": "^5.1.6",
-    "electron": "^39.2.3"
+    "sqlite3": "^5.1.6"
   },
   "devDependencies": {
+    "electron": "^39.2.3",
     "electron-builder": "^26.0.12"
   },
   "build": {
