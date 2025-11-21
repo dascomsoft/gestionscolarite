@@ -35,8 +35,12 @@ jobs:
       
     - name: Copy frontend to server
       run: |
-        mkdir -p server/frontend-dist
-        cp -r frontend/dist/* server/frontend-dist/
+        # Supprimer l'ancien dossier s'il existe
+        if (Test-Path "server/frontend-dist") {
+          Remove-Item -Recurse -Force "server/frontend-dist"
+        }
+        mkdir "server/frontend-dist"
+        Copy-Item -Recurse "frontend/dist/*" "server/frontend-dist/"
         echo "✅ Frontend copié dans server/frontend-dist/"
       
     - name: Install server dependencies
