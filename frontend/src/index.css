@@ -1,0 +1,158 @@
+
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+  font-weight: 500;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 0.5rem;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-secondary {
+  background-color: #4b5563;
+  color: white;
+  font-weight: 500;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 0.5rem;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+.btn-secondary:hover {
+  background-color: #374151;
+}
+
+.input-field {
+  width: 100%;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+}
+
+.input-field:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+  border-color: transparent;
+}
+
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+/* Styles d'impression identiques */
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-shadow-none {
+    box-shadow: none !important;
+  }
+  
+  .print-border-0 {
+    border: 0 !important;
+  }
+  
+  body {
+    background: white !important;
+  }
+  
+  .bg-gray-50 {
+    background: white !important;
+  }
+  
+  .bg-white {
+    background: white !important;
+  }
+}
+
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-bg-white {
+    background: white !important;
+  }
+  
+  .print-shadow-none {
+    box-shadow: none !important;
+  }
+  
+  .print-border-0 {
+    border: 0 !important;
+  }
+  
+  .print-py-0 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  
+  .print-px-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  .print-max-w-none {
+    max-width: none !important;
+  }
+  
+  .print-p-2 {
+    padding: 0.5rem !important;
+  }
+  
+  /* Masquer tous les éléments de navigation */
+  nav {
+    display: none !important;
+  }
+  
+  /* S'assurer que le body a un fond blanc */
+  body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Forcer les couleurs de texte */
+  .text-gray-900 {
+    color: #111827 !important;
+  }
+  
+  .text-gray-600 {
+    color: #4b5563 !important;
+  }
+  
+  .text-gray-500 {
+    color: #6b7280 !important;
+  }
+  
+  /* Optimiser pour l'impression */
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+  }
+}

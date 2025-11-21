@@ -1,0 +1,36 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "electron .",
+    "build": "electron-builder",
+    "build-win": "electron-builder --win --x64"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "sqlite3": "^5.1.6",
+    "electron": "^39.2.3"
+  },
+  "devDependencies": {
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.dascom.gestion-scolarite",
+    "productName": "Gestion Scolarité",
+    "directories": {
+      "output": "../../dist-electron"
+    },
+    "files": [
+      "src/**/*",
+      "../frontend/dist/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "src/assets/icon.ico"
+    }
+  }
+}

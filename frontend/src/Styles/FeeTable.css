@@ -1,0 +1,184 @@
+.fee-table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.fee-table-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e1e5e9;
+  background: #f8f9fa;
+}
+
+.fee-table-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.fee-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-header {
+  background: #f8f9fa;
+}
+
+.table-header-row {
+  border-bottom: 2px solid #e1e5e9;
+}
+
+.table-head {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.tariff-head {
+  width: 25%;
+}
+
+.amount-head, .paid-head, .remaining-head {
+  width: 25%;
+  text-align: right;
+}
+
+.table-body {
+  background: white;
+}
+
+.table-row {
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.table-row:hover {
+  background: #f8f9fa;
+}
+
+.table-cell {
+  padding: 16px;
+  font-size: 14px;
+}
+
+.tariff-cell {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.amount-cell, .paid-cell, .remaining-cell {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+  font-weight: 500;
+}
+
+.amount-cell {
+  color: #2c3e50;
+}
+
+.paid-cell {
+  color: #27ae60;
+}
+
+.remaining-cell {
+  color: #e74c3c;
+}
+
+.table-total-row {
+  background: #f8f9fa;
+  border-top: 2px solid #e1e5e9;
+  font-weight: 600;
+}
+
+.total-cell {
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.total-amount-cell {
+  text-align: right;
+  font-weight: 700;
+  color: #2c3e50;
+  font-family: 'Courier New', monospace;
+}
+
+/* Nouvelle section de paiement */
+.new-payment-section {
+  padding: 20px;
+  border-top: 1px solid #e1e5e9;
+  background: #f8f9fa;
+}
+
+.new-payment-title {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.payment-inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.payment-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.payment-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.payment-input {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.payment-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.payment-input:disabled {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.payment-max {
+  font-size: 12px;
+  color: #6b7280;
+  font-family: 'Courier New', monospace;
+}
+
+.fee-table-footer {
+  padding: 16px 20px;
+  background: #f8f9fa;
+  border-top: 1px solid #e1e5e9;
+}
+
+.footer-text {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+  text-align: center;
+  font-style: italic;
+}

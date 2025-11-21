@@ -1,0 +1,48 @@
+
+# Dependencies
+node_modules/
+*/node_modules/
+frontend/node_modules/
+server/node_modules/
+
+# Build outputs
+dist/
+*/dist/
+frontend/dist/
+server/dist/
+build/
+out/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Electron build
+dist-electron/
+*.exe
+*.dmg
+*.app
+*.deb
+*.rpm
+
+# Database (optionnel - si tu veux ignorer les backups)
+*.db
+*.sqlite
+*.sqlite3
