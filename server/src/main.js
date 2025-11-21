@@ -1,14 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const SchoolDB = require('./database/SchoolDB');
@@ -34,10 +23,12 @@ function createWindow() {
   });
 
   if (process.env.NODE_ENV === 'development') {
+    // Mode développement
     mainWindow.loadURL('http://localhost:5173');
     mainWindow.webContents.openDevTools();
   } else {
-    const indexPath = path.join(__dirname, '../../frontend/dist/index.html');
+    // Mode production - NOUVEAU CHEMIN
+    const indexPath = path.join(__dirname, '../frontend-dist/index.html');
     console.log('Chargement du fichier:', indexPath);
     mainWindow.loadFile(indexPath);
   }
@@ -51,6 +42,7 @@ function createWindow() {
   });
 }
 
+// Initialisation DB
 function initDatabase() {
   schoolDB = new SchoolDB();
   return schoolDB.init();
@@ -70,6 +62,9 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
+// ========== IPC & DB ==========
+
+// Requêtes base de données
 ipcMain.handle('database-query', async (event, { method, params }) => {
   try {
     if (!schoolDB[method]) {
@@ -83,23 +78,30 @@ ipcMain.handle('database-query', async (event, { method, params }) => {
   }
 });
 
+// Application
 ipcMain.handle('get-app-version', () => app.getVersion());
+
+// Contrôles fenêtre
 ipcMain.handle('minimize-window', () => mainWindow?.minimize());
+
 ipcMain.handle('maximize-window', () => {
   if (mainWindow) {
     mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
   }
 });
+
 ipcMain.handle('close-window', () => mainWindow?.close());
+
+// Dialogues système
 ipcMain.handle('show-save-dialog', async (event, options) => {
   const result = await dialog.showSaveDialog(mainWindow, options);
   return result;
 });
+
 ipcMain.handle('show-open-dialog', async (event, options) => {
   const result = await dialog.showOpenDialog(mainWindow, options);
   return result;
 });
-
 
 
 

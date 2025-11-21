@@ -30,7 +30,7 @@
     },
     "files": [
       "src/**/*",
-      "../frontend/dist/**/*"
+      "frontend-dist/**/*"
     ],
     "win": {
       "target": "nsis"

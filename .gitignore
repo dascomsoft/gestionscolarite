@@ -1,47 +1,57 @@
-# Dependencies
-node_modules/
-*/node_modules/
-frontend/node_modules/
-server/node_modules/
+name: Build Windows Installer
 
-# Build outputs
-dist/
-*/dist/
-frontend/dist/
-server/dist/
-build/
-out/
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-# Environment variables
-.env
-.env.*
-!.env.example
-
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Electron build
-dist-electron/
-*.exe
-*.dmg
-*.app
-*.deb
-*.rpm
-
-# Database (optionnel)
-*.db
-*.sqlite
-*.sqlite3
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: |
+          frontend/package-lock.json
+          server/package-lock.json
+          
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+      
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build
+      
+    - name: Copy frontend to server
+      run: |
+        mkdir -p server/frontend-dist
+        cp -r frontend/dist/* server/frontend-dist/
+        echo "✅ Frontend copié dans server/frontend-dist/"
+      
+    - name: Install server dependencies
+      run: |
+        cd server
+        npm ci
+      
+    - name: Build Electron for Windows
+      run: |
+        cd server
+        npm run build-win
+        
+    - name: Upload Windows Installer
+      uses: actions/upload-artifact@v4
+      with:
+        name: GestionScolarite-Windows
+        path: server/dist/*.exe
+        retention-days: 30
