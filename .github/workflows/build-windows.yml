@@ -33,6 +33,12 @@ jobs:
         cd frontend
         npm run build
       
+    - name: Copy frontend to server
+      run: |
+        mkdir -p server/frontend-dist
+        cp -r frontend/dist/* server/frontend-dist/
+        echo "✅ Frontend copié dans server/frontend-dist/"
+      
     - name: Install server dependencies
       run: |
         cd server

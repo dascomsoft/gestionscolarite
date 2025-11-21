@@ -27,7 +27,7 @@ function createWindow() {
     mainWindow.loadURL('http://localhost:5173');
     mainWindow.webContents.openDevTools();
   } else {
-    // Mode production - NOUVEAU CHEMIN
+    // Mode production
     const indexPath = path.join(__dirname, '../frontend-dist/index.html');
     console.log('Chargement du fichier:', indexPath);
     mainWindow.loadFile(indexPath);
@@ -102,8 +102,6 @@ ipcMain.handle('show-open-dialog', async (event, options) => {
   const result = await dialog.showOpenDialog(mainWindow, options);
   return result;
 });
-
-
 
 
 
