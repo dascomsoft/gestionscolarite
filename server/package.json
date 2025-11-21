@@ -11,6 +11,10 @@
   "author": "",
   "license": "ISC",
   "description": "Application de gestion scolaire avec Electron",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dascomsoft/gestionscolarite.git"
+  },
   "dependencies": {
     "sqlite3": "^5.1.6"
   },
