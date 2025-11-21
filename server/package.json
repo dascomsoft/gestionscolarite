@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "electron .",
     "build": "electron-builder",
-    "build-win": "electron-builder --win --x64"
+    "build-win": "electron-builder --win --x64 --publish=never"
   },
   "keywords": [],
   "author": "",
@@ -34,6 +34,7 @@
     ],
     "win": {
       "target": "nsis"
-    }
+    },
+    "publish": null
   }
 }
