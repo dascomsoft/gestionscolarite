@@ -44,12 +44,10 @@ jobs:
       run: |
         cd server
         npm run build-win
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Upload Windows Installer
       uses: actions/upload-artifact@v4
       with:
         name: GestionScolarite-Windows
-        path: server/dist-electron/*.exe
+        path: server/dist/*.exe
         retention-days: 30
