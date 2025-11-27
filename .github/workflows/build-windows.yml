@@ -1,109 +1,3 @@
-# name: Build Windows Installer
-
-# on:
-#   push:
-#     branches: [ main ]
-#   pull_request:
-#     branches: [ main ]
-
-# jobs:
-#   build-windows:
-#     runs-on: windows-latest
-    
-#     steps:
-#     - name: Checkout code
-#       uses: actions/checkout@v4
-      
-#     - name: Setup Node.js
-#       uses: actions/setup-node@v4
-#       with:
-#         node-version: '18'
-#         cache: 'npm'
-#         cache-dependency-path: |
-#           frontend/package-lock.json
-#           server/package-lock.json
-          
-#     - name: Install frontend dependencies
-#       run: |
-#         cd frontend
-#         npm ci
-      
-#     - name: Build frontend
-#       run: |
-#         cd frontend
-#         npm run build
-      
-#     - name: Copy frontend to server
-#       run: |
-#         # Supprimer l'ancien dossier s'il existe
-#         if (Test-Path "server/frontend-dist") {
-#           Remove-Item -Recurse -Force "server/frontend-dist"
-#         }
-#         mkdir "server/frontend-dist"
-#         Copy-Item -Recurse "frontend/dist/*" "server/frontend-dist/"
-#         echo "✅ Frontend copié dans server/frontend-dist/"
-      
-#     - name: Install server dependencies
-#       run: |
-#         cd server
-#         npm ci
-      
-#     - name: Build Electron for Windows
-#       run: |
-#         cd server
-#         npm run build-win
-        
-#     - name: Upload Windows Installer
-#       uses: actions/upload-artifact@v4
-#       with:
-#         name: GestionScolarite-Windows
-#         path: server/dist/*.exe
-#         retention-days: 30
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -122,6 +16,21 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    # ✅ AJOUTE CETTE ÉTAPE ICI
+    - name: Vérifier script réparation
+      run: |
+        echo "=== VÉRIFICATION DU SCRIPT RÉPARATION ==="
+        if exist server\Reparer.bat (
+          echo "✅ Script Reparer.bat trouvé"
+          echo "=== CONTENU (premières lignes) ==="
+          type server\Reparer.bat | head -10
+        ) else (
+          echo "❌ Script Reparer.bat NON trouvé"
+          echo "=== FICHIERS .BAT DISPONIBLES ==="
+          dir *.bat /s
+          exit 1
+        )
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -180,8 +89,44 @@ jobs:
           - Correction des problèmes de fermeture sous Windows
           - Gestion robuste de la base de données
           - Installation et désinstallation améliorées
+          - Script de réparation inclus (Reparer.bat)
           
           🚀 **Instructions :**
           1. Désinstallez l'ancienne version si présente
           2. Installez cette nouvelle version
           3. Redémarrez l'ordinateur si nécessaire
+          
+          🔧 **En cas de problème :**
+          - Exécutez le script Reparer.bat inclus
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
