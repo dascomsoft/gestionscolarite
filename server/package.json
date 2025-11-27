@@ -52,11 +52,12 @@
     }
   },
   "dependencies": {
-    "better-sqlite3": "^8.5.0",
-    "electron": "^22.3.0"
+    "better-sqlite3": "^8.5.0"
   },
   "devDependencies": {
     "electron-builder": "^24.6.4",
-    "electron-rebuild": "^3.2.9"
+    "electron-rebuild": "^3.2.9",
+    "electron": "^22.3.0"
+
   }
 }
