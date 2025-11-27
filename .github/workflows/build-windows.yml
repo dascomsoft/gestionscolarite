@@ -64,7 +64,7 @@ jobs:
     - name: Build Electron App
       run: |
         cd server
-        npm run build
+        npx electron-builder --win --x64
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
