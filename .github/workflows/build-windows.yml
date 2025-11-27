@@ -1,6 +1,14 @@
 
 
 
+
+
+
+
+
+
+
+
 name: Build Windows Installer
 
 on:
@@ -98,14 +106,6 @@ jobs:
           
           🔧 **En cas de problème :**
           - Exécutez le script Reparer.bat inclus
-
-
-
-
-
-
-
-
 
 
 
