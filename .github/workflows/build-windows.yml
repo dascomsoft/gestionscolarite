@@ -1,20 +1,11 @@
-
-
-
-
-
-
-
-
-
-
-
 name: Build Windows Installer
 
 on:
   push:
     tags:
       - 'v*'
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -25,20 +16,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # ✅ AJOUTE CETTE ÉTAPE ICI
     - name: Vérifier script réparation
       run: |
         echo "=== VÉRIFICATION DU SCRIPT RÉPARATION ==="
-        if exist server\Reparer.bat (
+        if (Test-Path "server\Reparer.bat") {
           echo "✅ Script Reparer.bat trouvé"
           echo "=== CONTENU (premières lignes) ==="
-          type server\Reparer.bat | head -10
-        ) else (
+          Get-Content "server\Reparer.bat" | Select-Object -First 10
+        } else {
           echo "❌ Script Reparer.bat NON trouvé"
           echo "=== FICHIERS .BAT DISPONIBLES ==="
-          dir *.bat /s
+          Get-ChildItem -Recurse -Filter "*.bat"
           exit 1
-        )
+        }
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -106,27 +96,3 @@ jobs:
           
           🔧 **En cas de problème :**
           - Exécutez le script Reparer.bat inclus
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
