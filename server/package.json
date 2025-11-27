@@ -1,40 +1,62 @@
 {
-  "name": "server",
+  "name": "gestion-scolarite",
   "version": "1.0.0",
+  "description": "Application de gestion de scolarité - Groupe Scolaire Bilingue La Grace De Dieu",
   "main": "src/main.js",
+  "homepage": "./",
   "scripts": {
     "dev": "electron .",
-    "build": "electron-builder",
-    "build-win": "electron-builder --win --x64 --publish=never"
+    "build": "electron-builder --win --x64",
+    "build:prod": "electron-builder --win --x64 --publish=never",
+    "postinstall": "electron-rebuild -f -w better-sqlite3",
+    "rebuild": "electron-rebuild -f -w better-sqlite3"
   },
   "keywords": [],
-  "author": "",
+  "author": "Groupe Scolaire Bilingue La Grace De Dieu",
   "license": "ISC",
-  "description": "Application de gestion scolaire avec Electron",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/dascomsoft/gestionscolarite.git"
-  },
-  "dependencies": {
-    "sqlite3": "^5.1.6"
-  },
-  "devDependencies": {
-    "electron": "^39.2.3",
-    "electron-builder": "^26.0.12"
-  },
   "build": {
-    "appId": "com.dascom.gestion-scolarite",
+    "appId": "com.ecole.gestion-scolarite",
     "productName": "Gestion Scolarité",
     "directories": {
-      "output": "dist"
+      "output": "build",
+      "buildResources": "src/assets"
     },
     "files": [
       "src/**/*",
-      "frontend-dist/**/*"
+      "frontend-dist/**/*",
+      "node_modules/**/*",
+      "package.json"
     ],
     "win": {
-      "target": "nsis"
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "src/assets/logograce.png",
+      "publisherName": "Groupe Scolaire Bilingue La Grace De Dieu"
     },
-    "publish": null
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Gestion Scolarité",
+      "uninstallDisplayName": "Gestion Scolarité"
+    },
+    "publish": {
+      "provider": "github",
+      "releaseType": "release"
+    }
+  },
+  "dependencies": {
+    "better-sqlite3": "^8.5.0",
+    "electron": "^22.3.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^24.6.4",
+    "electron-rebuild": "^3.2.9"
   }
 }
