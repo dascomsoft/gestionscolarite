@@ -1,63 +1,44 @@
 {
   "name": "gestion-scolarite",
   "version": "1.0.0",
-  "description": "Application de gestion de scolarité - Groupe Scolaire Bilingue La Grace De Dieu",
+  "description": "Application de gestion scolaire",
   "main": "src/main.js",
-  "homepage": "./",
   "scripts": {
-    "dev": "electron .",
+    "start": "electron .",
     "build": "electron-builder --win --x64",
-    "build:prod": "electron-builder --win --x64 --publish=never",
-    "postinstall": "electron-rebuild -f -w better-sqlite3",
-    "rebuild": "electron-rebuild -f -w better-sqlite3"
+    "dev": "electron . --dev"
   },
-  "keywords": [],
-  "author": "Groupe Scolaire Bilingue La Grace De Dieu",
-  "license": "ISC",
+  "devDependencies": {
+    "electron": "^22.3.0",
+    "electron-builder": "^24.6.3"
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.6",
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
   "build": {
-    "appId": "com.ecole.gestion-scolarite",
-    "productName": "Gestion Scolarité",
+    "appId": "com.dascomsoft.gestion-scolarite",
+    "productName": "Gestion Scolarite",
     "directories": {
-      "output": "build",
-      "buildResources": "src/assets"
+      "output": "build"
     },
     "files": [
       "src/**/*",
       "frontend-dist/**/*",
-      "node_modules/**/*",
-      "package.json"
+      "node_modules/**/*"
     ],
     "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": ["x64"]
-        }
-      ],
-      "icon": "src/assets/logograce.png",
-      "publisherName": "Groupe Scolaire Bilingue La Grace De Dieu"
+      "target": "nsis",
+      "icon": "build/icon.ico"
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "deleteAppDataOnUninstall": true,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "Gestion Scolarité",
-      "uninstallDisplayName": "Gestion Scolarité"
-    },
-    "publish": {
-      "provider": "github",
-      "releaseType": "release"
+      "createStartMenuShortcut": true
     }
   },
-  "dependencies": {
-    "better-sqlite3": "^8.5.0"
-  },
-  "devDependencies": {
-    "electron-builder": "^24.6.4",
-    "electron-rebuild": "^3.2.9",
-    "electron": "^22.3.0"
-
-  }
+  "author": "DascomSoft",
+  "license": "MIT"
 }
