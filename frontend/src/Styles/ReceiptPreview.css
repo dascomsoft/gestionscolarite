@@ -1,0 +1,557 @@
+/* Variables CSS pour l'impression optimisée */
+:root {
+  --primary: #000000;
+  --text-dark: #000000;
+  --text-gray: #333333;
+  --border: #000000;
+  --bg-header: #f5f5f5;
+  --bg-accent: #f8f9fa;
+  --border-light: #dddddd;
+}
+
+/* RESET CRITIQUE POUR L'IMPRESSION */
+@media print {
+  @page {
+    margin: 0.4cm !important;
+    size: A4 portrait;
+    marks: crop;
+  }
+
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    font-size: 10pt !important;
+    line-height: 1.1 !important;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* Container principal - OPTIMISÉ POUR A4 */
+.receipt-container {
+  background: white;
+  padding: 0.4cm;
+  max-width: 21cm;
+  min-height: 29.7cm;
+  margin: 0 auto;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 10pt;
+  line-height: 1.1;
+  color: var(--text-dark);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2cm;
+}
+
+/* Cacher le bouton d'impression */
+@media print {
+  .print-actions {
+    display: none !important;
+  }
+}
+
+@media screen {
+  .print-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem; /* Espace réduit entre les boutons */
+    margin-top: 0.5rem; /* Rapproché du contenu */
+    padding-top: 0.5rem;
+    border-top: 1px dashed #ccc;
+  }
+
+  .print-button {
+    background: #2563eb;
+    color: white;
+    padding: 0.6rem 2rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12pt;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .print-button:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+  }
+
+  /* Styles pour les autres boutons (Nouveau paiement et Voir liste) */
+  .action-buttons {
+    display: flex;
+    gap: 0.8rem;
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+
+  .secondary-button {
+    background: #6b7280;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11pt;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    flex: 1;
+  }
+
+  .secondary-button:hover {
+    background: #4b5563;
+    transform: translateY(-1px);
+  }
+
+  .secondary-button.primary {
+    background: #059669;
+  }
+
+  .secondary-button.primary:hover {
+    background: #047857;
+  }
+}
+
+/* En-tête administratif - ULTRA COMPACT */
+.receipt-header {
+  text-align: center;
+  padding-bottom: 0.15cm;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.15cm;
+}
+
+.header-official {
+  line-height: 1;
+}
+
+.header-title {
+  font-size: 11pt;
+  font-weight: bold;
+  margin-bottom: 0.05cm;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.header-subtitle {
+  font-size: 9pt;
+  font-weight: bold;
+  margin-bottom: 0.03cm;
+}
+
+.header-detail {
+  font-size: 8pt;
+  color: var(--text-gray);
+}
+
+/* Section titre - COMPACT */
+.receipt-title-section {
+  text-align: center;
+  padding: 0.15cm 0;
+  margin-bottom: 0.15cm;
+}
+
+.school-title {
+  font-size: 12pt;
+  font-weight: bold;
+  margin-bottom: 0.05cm;
+  text-transform: uppercase;
+}
+
+.receipt-title {
+  font-size: 11pt;
+  font-weight: bold;
+  color: var(--text-dark);
+}
+
+/* Informations principales - TRÈS COMPACT */
+.receipt-main-info {
+  background: var(--bg-accent);
+  padding: 0.15cm;
+  border: 1px solid var(--border-light);
+  margin-bottom: 0.15cm;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.1cm;
+  font-size: 9pt;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.05cm 0.1cm;
+}
+
+.info-label {
+  font-weight: 500;
+  color: var(--text-gray);
+}
+
+.info-value {
+  font-weight: 600;
+}
+
+.info-value.bold {
+  font-weight: 700;
+}
+
+/* Section paiement actuel - COMPACT */
+.current-payment-section {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 0.15cm;
+  margin-bottom: 0.15cm;
+}
+
+.section-title {
+  font-size: 9pt;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0.1cm;
+  text-transform: uppercase;
+  background: var(--bg-header);
+  padding: 0.08cm;
+  border: 1px solid var(--border-light);
+}
+
+.payment-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.08cm;
+}
+
+.payment-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.06cm 0.1cm;
+  font-size: 9pt;
+  border-bottom: 1px dotted var(--border-light);
+}
+
+.payment-amount {
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+  font-size: 10pt; /* Légèrement agrandi */
+}
+
+.payment-total-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.08cm 0.1cm;
+  background: var(--bg-header);
+  font-weight: bold;
+  font-size: 10pt; /* Légèrement agrandi */
+  border-top: 1px solid var(--border);
+  margin-top: 0.05cm;
+}
+
+.total-amount {
+  font-family: 'Courier New', monospace;
+  font-size: 11pt; /* Légèrement agrandi */
+}
+
+/* Tableau de situation financière - OPTIMISÉ */
+.payment-status-section {
+  margin-bottom: 0.15cm;
+}
+
+.status-table {
+  border: 1px solid var(--border);
+}
+
+.compact-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8pt;
+  line-height: 1;
+}
+
+.compact-table th {
+  background: var(--bg-header);
+  font-weight: bold;
+  padding: 0.08cm 0.1cm;
+  border: 1px solid var(--border);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.compact-table td {
+  padding: 0.06cm 0.1cm;
+  border: 1px solid var(--border-light);
+  vertical-align: middle;
+}
+
+.col-desc { width: 40%; text-align: left; }
+.col-amount { width: 20%; text-align: right; }
+.col-paid { width: 20%; text-align: right; }
+.col-restant { width: 20%; text-align: right; }
+
+.desc-cell { text-align: left; font-weight: 500; }
+.amount-cell, .paid-cell, .restant-cell { 
+  text-align: right; 
+  font-family: 'Courier New', monospace;
+  font-weight: 500;
+  font-size: 9pt; /* Légèrement agrandi pour les petits chiffres */
+}
+
+/* Ligne des totaux */
+.total-row {
+  background: var(--bg-header) !important;
+  font-weight: bold;
+  border-top: 2px solid var(--border);
+}
+
+.total-row td {
+  padding: 0.08cm 0.1cm;
+  border: 1px solid var(--border);
+}
+
+.total-desc { text-align: center; text-transform: uppercase; }
+.total-amount, .total-paid, .total-restant { 
+  text-align: right; 
+  font-family: 'Courier New', monospace;
+  font-size: 10pt; /* Légèrement agrandi */
+}
+
+/* Informations supplémentaires */
+.additional-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.1cm;
+  font-size: 8pt;
+  margin-bottom: 0.6cm; /* Rapproché du pied de page */
+}
+
+.operator-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05cm;
+}
+
+.legal-notice {
+  flex: 1;
+  text-align: center;
+  padding: 0 0.5cm;
+}
+
+.notice-text {
+  font-weight: bold;
+  font-style: italic;
+  color: var(--text-gray);
+  font-size: 8pt;
+}
+
+/* Pied de page - COMPACT ET RAPPROCHÉ */
+.receipt-footer {
+  border-top: 1px solid var(--border);
+  padding-top: 0.1cm;
+  font-size: 7pt;
+  line-height: 1.1;
+  text-align: center;
+  margin-top: 0; /* Supprimé le margin-top automatique */
+  margin-bottom: 0.5cm; /* Espace réduit en bas */
+}
+
+.footer-contacts {
+  margin-bottom: 0.08cm;
+}
+
+.footer-contacts p {
+  margin-bottom: 0.03cm;
+}
+
+.footer-legal {
+  color: var(--text-gray);
+}
+
+.footer-legal p {
+  margin-bottom: 0.03cm;
+}
+
+.print-date {
+  font-weight: bold;
+  margin-top: 0.05cm;
+}
+
+/* État d'erreur */
+.receipt-error {
+  text-align: center;
+  padding: 1cm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-content {
+  color: #ff0000;
+  font-size: 11pt;
+}
+
+.error-detail {
+  font-size: 9pt;
+  margin-top: 0.1cm;
+  color: #666;
+}
+
+/* OPTIMISATIONS FINALES POUR ÉVITER LES COUPURES */
+@media print {
+  .receipt-container {
+    page-break-inside: avoid;
+    page-break-after: avoid;
+    page-break-before: avoid;
+  }
+
+  .payment-status-section {
+    page-break-inside: avoid;
+  }
+
+  .compact-table {
+    page-break-inside: avoid;
+  }
+
+  /* Réduire légèrement les polices si nécessaire */
+  .receipt-container {
+    font-size: 9pt;
+  }
+
+  .compact-table {
+    font-size: 7pt;
+  }
+
+  /* Garantir que tout tient sur une page */
+  .receipt-container {
+    transform: scale(0.95);
+    transform-origin: top left;
+    width: 105%;
+  }
+
+  /* Ajustement spécifique pour l'écart réduit en impression */
+  .additional-info {
+    margin-bottom: 0.4cm; /* Environ 50px en cm */
+  }
+  
+  .receipt-footer {
+    margin-top: -0.2cm; /* Remonter légèrement le pied de page */
+  }
+}
+
+/* Responsive pour l'écran */
+@media screen and (max-width: 768px) {
+  .receipt-container {
+    padding: 0.5rem;
+    margin: 0.5rem;
+    font-size: 9pt;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+
+  .additional-info {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+    margin-bottom: 3rem; /* 50px environ en rem */
+  }
+
+  .operator-info {
+    align-items: center;
+  }
+
+  .receipt-footer {
+    margin-top: 0;
+    margin-bottom: 2rem; /* Espace réduit en bas pour écran */
+  }
+
+  .print-actions {
+    gap: 0.4rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .print-button,
+  .secondary-button {
+    max-width: 100%;
+    font-size: 11pt;
+  }
+}
+
+/* Styles pour garantir la lisibilité */
+.bold {
+  font-weight: bold !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+/* Éviter les veuves et orphelines */
+p, .info-item, .payment-line {
+  widows: 3;
+  orphans: 3;
+}
+
+/* Ajustements spécifiques pour l'écart de 50-60px */
+@media screen {
+  .additional-info {
+    margin-bottom: 3.125rem; /* 50px exactement (50/16 = 3.125rem) */
+  }
+  
+  .receipt-footer {
+    margin-top: 0;
+  }
+}
+
+@media print {
+  .additional-info {
+    margin-bottom: 1.4cm; /* Environ 50px en cm pour l'impression */
+  }
+}
+
+/* Agrandissement léger des chiffres dans tout le document */
+.payment-amount,
+.total-amount,
+.amount-cell,
+.paid-cell,
+.restant-cell,
+.total-amount-cell,
+.total-paid-cell,
+.total-restant-cell {
+  font-size: 10pt !important; /* Légèrement agrandi */
+}
+
+/* Pour les totaux qui doivent être plus visibles */
+.total-amount,
+.total-amount-cell,
+.total-paid-cell,
+.total-restant-cell {
+  font-size: 11pt !important; /* Un peu plus grand pour les totaux */
+}
+
+/* Assurer que les chiffres dans le tableau sont bien visibles */
+.compact-table .amount-cell,
+.compact-table .paid-cell,
+.compact-table .restant-cell {
+  font-size: 9pt !important; /* Légèrement agrandi par rapport à l'original */
+}

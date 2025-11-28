@@ -1,0 +1,98 @@
+name: Build Windows Installer
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Vérifier script réparation
+      run: |
+        echo "=== VÉRIFICATION DU SCRIPT RÉPARATION ==="
+        if (Test-Path "server\Reparer.bat") {
+          echo "✅ Script Reparer.bat trouvé"
+          echo "=== CONTENU (premières lignes) ==="
+          Get-Content "server\Reparer.bat" | Select-Object -First 10
+        } else {
+          echo "❌ Script Reparer.bat NON trouvé"
+          echo "=== FICHIERS .BAT DISPONIBLES ==="
+          Get-ChildItem -Recurse -Filter "*.bat"
+          exit 1
+        }
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: |
+          frontend/package-lock.json
+          server/package-lock.json
+
+    - name: Install Frontend Dependencies
+      run: |
+        cd frontend
+        npm ci
+
+    - name: Build Frontend
+      run: |
+        cd frontend
+        npm run build
+
+    - name: Copy Frontend Build to Server
+      run: |
+        if (Test-Path "server/frontend-dist") { Remove-Item -Recurse -Force "server/frontend-dist" }
+        New-Item -ItemType Directory -Path "server/frontend-dist" -Force
+        Copy-Item -Recurse -Path "frontend/dist/*" -Destination "server/frontend-dist/"
+
+    - name: Install Server Dependencies
+      run: |
+        cd server
+        npm install --production=false
+        npx electron-rebuild -v 22.3.0
+
+    - name: Build Electron App
+      run: |
+        cd server
+        npx electron-builder --win --x64
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Windows Installer
+      uses: actions/upload-artifact@v4
+      with:
+        name: GestionScolarite-Windows
+        path: server/build/*.exe
+        retention-days: 30
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: server/build/*.exe
+        body: |
+          📦 **Gestion Scolarité - Version ${{ github.ref_name }}**
+          
+          ✅ **Nouveautés :**
+          - Correction des problèmes de fermeture sous Windows
+          - Gestion robuste de la base de données
+          - Installation et désinstallation améliorées
+          - Script de réparation inclus (Reparer.bat)
+          
+          🚀 **Instructions :**
+          1. Désinstallez l'ancienne version si présente
+          2. Installez cette nouvelle version
+          3. Redémarrez l'ordinateur si nécessaire
+          
+          🔧 **En cas de problème :**
+          - Exécutez le script Reparer.bat inclus

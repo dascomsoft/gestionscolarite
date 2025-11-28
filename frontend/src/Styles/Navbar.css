@@ -1,0 +1,243 @@
+/* Navbar principale */
+.navbar {
+  background-color: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.navbar-container {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .navbar-container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar-container {
+    padding: 0 2rem;
+  }
+}
+
+/* Contenu de la navbar */
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4rem;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Bouton retour */
+.back-button {
+  margin-right: 1rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #f9fafb;
+}
+
+.back-icon {
+  height: 1.25rem;
+  width: 1.25rem;
+  color: #4b5563;
+}
+
+/* Titres */
+.title-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.navbar-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.2;
+}
+
+/* Liens de navigation */
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: #374151;
+  background-color: transparent;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-link:hover {
+  color: #111827;
+  background-color: #f9fafb;
+}
+
+.nav-icon {
+  height: 1rem;
+  width: 1rem;
+}
+
+/* Bouton de déconnexion */
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #dc2626;
+  background-color: transparent;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-button:hover {
+  color: #b91c1c;
+  background-color: #fef2f2;
+}
+
+.logout-icon {
+  height: 1rem;
+  width: 1rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .navbar-container {
+    height: auto;
+    padding: 0.75rem 1rem;
+  }
+
+  .navbar-left {
+    flex: 1;
+  }
+
+  .navbar-right {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  .nav-link span,
+  .logout-button span {
+    display: none;
+  }
+
+  .nav-link,
+  .logout-button {
+    padding: 0.5rem;
+  }
+
+  .title-container {
+    max-width: 200px;
+  }
+
+  .navbar-title {
+    font-size: 1.125rem;
+  }
+
+  .navbar-subtitle {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-container {
+    padding: 0.5rem;
+  }
+
+  .back-button {
+    margin-right: 0.5rem;
+    padding: 0.375rem;
+  }
+
+  .back-icon {
+    height: 1rem;
+    width: 1rem;
+  }
+
+  .nav-link,
+  .logout-button {
+    padding: 0.375rem;
+  }
+
+  .title-container {
+    max-width: 150px;
+  }
+
+  .navbar-title {
+    font-size: 1rem;
+  }
+
+  .navbar-subtitle {
+    font-size: 0.7rem;
+  }
+}
+
+/* États de focus pour l'accessibilité */
+.back-button:focus-visible,
+.nav-link:focus-visible,
+.logout-button:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Animation de transition */
+.navbar {
+  transition: all 0.3s ease;
+}
+
+.nav-link,
+.logout-button,
+.back-button {
+  transition: all 0.15s ease-in-out;
+}
+
+/* Amélioration de la lisibilité sur petits écrans */
+@media (max-width: 360px) {
+  .navbar-right {
+    gap: 0.25rem;
+  }
+
+  .nav-link,
+  .logout-button {
+    padding: 0.25rem;
+  }
+
+  .nav-icon,
+  .logout-icon {
+    height: 0.875rem;
+    width: 0.875rem;
+  }
+}

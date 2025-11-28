@@ -1,0 +1,49 @@
+{
+  "name": "gestion-scolarite",
+  "version": "1.0.0",
+  "description": "Application de gestion scolaire",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dascomsoft/gestionscolarite"
+  },
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64",
+    "dev": "electron . --dev",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "devDependencies": {
+    "electron": "^22.3.0",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.7"
+  },
+  "build": {
+    "appId": "com.dascomsoft.gestion-scolarite",
+    "productName": "Gestion Scolarite",
+    "directories": {
+      "output": "build"
+    },
+    "files": [
+      "src/**/*",
+      "frontend-dist/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "author": "DascomSoft",
+  "license": "MIT"
+}
