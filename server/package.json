@@ -2,6 +2,10 @@
   "name": "gestion-scolarite",
   "version": "1.0.0",
   "description": "Application de gestion scolaire",
+  "repository": {
+    "type": "git", 
+    "url": "https://github.com/dascomsoft/gestionscolarite"
+  },
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
