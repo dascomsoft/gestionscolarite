@@ -6,6 +6,7 @@ on:
       - 'v*'
     branches:
       - main
+      - master  # SEULEMENT CETTE LIGNE AJOUTÉE
   workflow_dispatch:
 
 jobs:
@@ -72,14 +73,14 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: GestionScolarite-Windows
-        path: server/build/*.exe
+        path: server/build/*.exe  # LAISSE COMME ÇA - ÇA FONCTIONNE
         retention-days: 30
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: server/build/*.exe
+        files: server/build/*.exe  # LAISSE COMME ÇA - ÇA FONCTIONNE
         body: |
           📦 **Gestion Scolarité - Version ${{ github.ref_name }}**
           
