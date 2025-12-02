@@ -809,6 +809,503 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const sqlite3 = require('sqlite3').verbose();
+// const path = require('path');
+// const fs = require('fs');
+
+// class SchoolDB {
+//   constructor() {
+//     const userDataPath = path.join(require('os').homedir(), '.gestion-scolarite');
+    
+//     if (!fs.existsSync(userDataPath)) {
+//       fs.mkdirSync(userDataPath, { recursive: true });
+//     }
+    
+//     this.dbPath = path.join(userDataPath, 'school.db');
+//     this.init();
+//   }
+
+//   init() {
+//     try {
+//       this.db = new sqlite3.Database(this.dbPath, (err) => {
+//         if (err) {
+//           console.error('❌ Erreur connexion SQLite:', err);
+//           throw err;
+//         }
+//         console.log('✅ Base de données initialisée:', this.dbPath);
+//         this.createTables();
+//         this.seedData();
+//       });
+//     } catch (error) {
+//       console.error('❌ Erreur lors de l\'initialisation de la base de données:', error);
+//       throw error;
+//     }
+//   }
+
+//   createTables() {
+//     // Créer les tables d'abord
+//     const tables = [
+//       // Table des opérateurs
+//       `CREATE TABLE IF NOT EXISTS operators (
+//         id INTEGER PRIMARY KEY AUTOINCREMENT,
+//         name TEXT NOT NULL,
+//         email TEXT UNIQUE NOT NULL,
+//         password TEXT NOT NULL,
+//         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+//       )`,
+      
+//       // Table des élèves
+//       `CREATE TABLE IF NOT EXISTS students (
+//         id INTEGER PRIMARY KEY AUTOINCREMENT,
+//         name TEXT NOT NULL,
+//         class TEXT NOT NULL,
+//         section TEXT NOT NULL,
+//         school_year TEXT NOT NULL,
+//         matricule TEXT UNIQUE,
+//         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+//       )`,
+      
+//       // Table des paiements
+//       `CREATE TABLE IF NOT EXISTS payments (
+//         id INTEGER PRIMARY KEY AUTOINCREMENT,
+//         student_id INTEGER NOT NULL,
+//         student_name TEXT NOT NULL,
+//         class_name TEXT NOT NULL,
+//         section TEXT NOT NULL,
+//         school_year TEXT NOT NULL,
+//         paid_amounts TEXT NOT NULL,
+//         total_paid INTEGER NOT NULL,
+//         receipt_number TEXT UNIQUE NOT NULL,
+//         operator TEXT NOT NULL,
+//         date DATETIME DEFAULT CURRENT_TIMESTAMP,
+//         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+//         FOREIGN KEY (student_id) REFERENCES students (id)
+//       )`
+//     ];
+
+//     // Créer les tables
+//     tables.forEach(sql => {
+//       this.db.run(sql, (err) => {
+//         if (err) console.error('❌ Erreur création table:', err);
+//       });
+//     });
+
+//     // Créer les index APRÈS les tables (avec un délai)
+//     setTimeout(() => {
+//       const indexes = [
+//         'CREATE INDEX IF NOT EXISTS idx_students_name ON students(name)',
+//         'CREATE INDEX IF NOT EXISTS idx_payments_student_id ON payments(student_id)'
+//       ];
+
+//       indexes.forEach(sql => {
+//         this.db.run(sql, (err) => {
+//           if (err) console.error('❌ Erreur création index:', err);
+//         });
+//       });
+//     }, 200);
+//   }
+
+//   seedData() {
+//     // Attendre que les tables soient créées
+//     setTimeout(() => {
+//       // Vérifier si un admin existe
+//       this.db.get('SELECT COUNT(*) as count FROM operators WHERE email = ?', ['admin@ecole.com'], (err, row) => {
+//         if (err) {
+//           console.error('❌ Erreur vérification admin:', err);
+//           return;
+//         }
+        
+//         if (!row || row.count === 0) {
+//           this.db.run(
+//             'INSERT INTO operators (name, email, password) VALUES (?, ?, ?)',
+//             ['Administrateur', 'admin@ecole.com', 'admin123'],
+//             function(err) {
+//               if (err) {
+//                 // Ignorer l'erreur si l'admin existe déjà
+//                 if (err.code === 'SQLITE_CONSTRAINT') {
+//                   console.log('👤 Opérateur admin existe déjà');
+//                 } else {
+//                   console.error('❌ Erreur création admin:', err);
+//                 }
+//               } else {
+//                 console.log('👤 Opérateur admin créé');
+//               }
+//             }
+//           );
+//         } else {
+//           console.log('👤 Opérateur admin existe déjà');
+//         }
+//       });
+//     }, 500);
+//   }
+
+//   /**
+//    * Ferme proprement la connexion à la base de données
+//    */
+//   close() {
+//     try {
+//       if (this.db) {
+//         this.db.close((err) => {
+//           if (err) {
+//             console.error('❌ Erreur fermeture SQLite:', err);
+//           } else {
+//             console.log('✅ Connexion SQLite fermée proprement');
+//           }
+//         });
+//         this.db = null;
+//       }
+//     } catch (error) {
+//       console.error('❌ Erreur lors de la fermeture SQLite:', error);
+//     }
+//   }
+
+//   /**
+//    * Vérifie si la base de données est ouverte
+//    */
+//   isOpen() {
+//     return this.db !== null;
+//   }
+
+//   /**
+//    * Exécute une requête avec promesse
+//    */
+//   runAsync(sql, params = []) {
+//     return new Promise((resolve, reject) => {
+//       this.db.run(sql, params, function(err) {
+//         if (err) reject(err);
+//         else resolve(this);
+//       });
+//     });
+//   }
+
+//   /**
+//    * Récupère une ligne avec promesse
+//    */
+//   getAsync(sql, params = []) {
+//     return new Promise((resolve, reject) => {
+//       this.db.get(sql, params, (err, row) => {
+//         if (err) reject(err);
+//         else resolve(row);
+//       });
+//     });
+//   }
+
+//   /**
+//    * Récupère plusieurs lignes avec promesse
+//    */
+//   allAsync(sql, params = []) {
+//     return new Promise((resolve, reject) => {
+//       this.db.all(sql, params, (err, rows) => {
+//         if (err) reject(err);
+//         else resolve(rows);
+//       });
+//     });
+//   }
+
+//   // ===== OPÉRATEURS =====
+//   async getOperatorByEmail(email) {
+//     try {
+//       const operator = await this.getAsync('SELECT * FROM operators WHERE email = ?', [email]);
+//       return JSON.parse(JSON.stringify(operator));
+//     } catch (error) {
+//       console.error('❌ Erreur getOperatorByEmail:', error);
+//       throw error;
+//     }
+//   }
+
+//   async createOperator(name, email, password) {
+//     try {
+//       const result = await this.runAsync(
+//         'INSERT INTO operators (name, email, password) VALUES (?, ?, ?)',
+//         [name, email, password]
+//       );
+//       return { id: result.lastID, name, email };
+//     } catch (error) {
+//       console.error('❌ Erreur createOperator:', error);
+//       throw error;
+//     }
+//   }
+
+//   // ===== ÉLÈVES =====
+//   async createStudent(name, class_, section, schoolYear, matricule) {
+//     try {
+//       const result = await this.runAsync(
+//         'INSERT INTO students (name, class, section, school_year, matricule) VALUES (?, ?, ?, ?, ?)',
+//         [name, class_, section, schoolYear, matricule]
+//       );
+//       return { 
+//         id: result.lastID, 
+//         name, 
+//         class: class_, 
+//         section, 
+//         schoolYear, 
+//         matricule,
+//         createdAt: new Date().toISOString()
+//       };
+//     } catch (error) {
+//       console.error('❌ Erreur createStudent:', error);
+//       throw error;
+//     }
+//   }
+
+//   async getStudents() {
+//     try {
+//       const students = await this.allAsync('SELECT * FROM students ORDER BY created_at DESC');
+//       return JSON.parse(JSON.stringify(students));
+//     } catch (error) {
+//       console.error('❌ Erreur getStudents:', error);
+//       throw error;
+//     }
+//   }
+
+//   async getStudent(id) {
+//     try {
+//       const student = await this.getAsync('SELECT * FROM students WHERE id = ?', [id]);
+//       return JSON.parse(JSON.stringify(student));
+//     } catch (error) {
+//       console.error('❌ Erreur getStudent:', error);
+//       throw error;
+//     }
+//   }
+
+//   async updateStudent(id, name, class_, section, schoolYear) {
+//     try {
+//       const result = await this.runAsync(
+//         'UPDATE students SET name = ?, class = ?, section = ?, school_year = ? WHERE id = ?',
+//         [name, class_, section, schoolYear, id]
+//       );
+//       return result.changes > 0 ? { id, name, class: class_, section, schoolYear } : null;
+//     } catch (error) {
+//       console.error('❌ Erreur updateStudent:', error);
+//       throw error;
+//     }
+//   }
+
+//   async deleteStudent(id) {
+//     try {
+//       // Supprimer d'abord les paiements
+//       await this.runAsync('DELETE FROM payments WHERE student_id = ?', [id]);
+      
+//       // Puis l'élève
+//       const result = await this.runAsync('DELETE FROM students WHERE id = ?', [id]);
+//       return result.changes > 0;
+//     } catch (error) {
+//       console.error('❌ Erreur deleteStudent:', error);
+//       throw error;
+//     }
+//   }
+
+//   async searchStudents(query) {
+//     try {
+//       const students = await this.allAsync(
+//         'SELECT * FROM students WHERE name LIKE ? OR matricule LIKE ? OR class LIKE ? ORDER BY name',
+//         [`%${query}%`, `%${query}%`, `%${query}%`]
+//       );
+//       return JSON.parse(JSON.stringify(students));
+//     } catch (error) {
+//       console.error('❌ Erreur searchStudents:', error);
+//       throw error;
+//     }
+//   }
+
+//   // ===== PAIEMENTS =====
+//   async createPayment(studentId, studentName, className, section, schoolYear, paidAmounts, totalPaid, receiptNumber, operator) {
+//     try {
+//       const paidAmountsStr = JSON.stringify(paidAmounts);
+//       const result = await this.runAsync(
+//         `INSERT INTO payments (student_id, student_name, class_name, section, school_year, paid_amounts, total_paid, receipt_number, operator)
+//          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+//         [studentId, studentName, className, section, schoolYear, paidAmountsStr, totalPaid, receiptNumber, operator]
+//       );
+      
+//       return { 
+//         id: result.lastID,
+//         studentId,
+//         studentName,
+//         className,
+//         section,
+//         schoolYear,
+//         paidAmounts,
+//         totalPaid,
+//         receiptNumber,
+//         operator,
+//         date: new Date().toISOString()
+//       };
+//     } catch (error) {
+//       console.error('❌ Erreur createPayment:', error);
+//       throw error;
+//     }
+//   }
+
+//   async getStudentPayments(studentId) {
+//     try {
+//       const payments = await this.allAsync(
+//         'SELECT * FROM payments WHERE student_id = ? ORDER BY date DESC',
+//         [studentId]
+//       );
+//       const cleanedPayments = payments.map(payment => ({
+//         ...JSON.parse(JSON.stringify(payment)),
+//         paidAmounts: JSON.parse(payment.paid_amounts)
+//       }));
+//       return cleanedPayments;
+//     } catch (error) {
+//       console.error('❌ Erreur getStudentPayments:', error);
+//       throw error;
+//     }
+//   }
+
+//   async getAllPayments() {
+//     try {
+//       const payments = await this.allAsync(`
+//         SELECT p.*, s.matricule 
+//         FROM payments p 
+//         LEFT JOIN students s ON p.student_id = s.id 
+//         ORDER BY p.date DESC
+//       `);
+      
+//       const cleanedPayments = payments.map(payment => ({
+//         ...JSON.parse(JSON.stringify(payment)),
+//         paidAmounts: JSON.parse(payment.paid_amounts)
+//       }));
+//       return cleanedPayments;
+//     } catch (error) {
+//       console.error('❌ Erreur getAllPayments:', error);
+//       throw error;
+//     }
+//   }
+
+//   async deletePayment(id) {
+//     try {
+//       const result = await this.runAsync('DELETE FROM payments WHERE id = ?', [id]);
+//       return result.changes > 0;
+//     } catch (error) {
+//       console.error('❌ Erreur deletePayment:', error);
+//       throw error;
+//     }
+//   }
+// }
+
+// module.exports = SchoolDB;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
@@ -816,372 +1313,122 @@ const fs = require('fs');
 class SchoolDB {
   constructor() {
     const userDataPath = path.join(require('os').homedir(), '.gestion-scolarite');
-    
-    if (!fs.existsSync(userDataPath)) {
-      fs.mkdirSync(userDataPath, { recursive: true });
-    }
+    if (!fs.existsSync(userDataPath)) fs.mkdirSync(userDataPath, { recursive: true });
     
     this.dbPath = path.join(userDataPath, 'school.db');
-    this.init();
-  }
-
-  init() {
-    try {
-      this.db = new sqlite3.Database(this.dbPath, (err) => {
-        if (err) {
-          console.error('❌ Erreur connexion SQLite:', err);
-          throw err;
-        }
-        console.log('✅ Base de données initialisée:', this.dbPath);
-        this.createTables();
-        this.seedData();
-      });
-    } catch (error) {
-      console.error('❌ Erreur lors de l\'initialisation de la base de données:', error);
-      throw error;
-    }
+    this.db = new sqlite3.Database(this.dbPath, (err) => {
+      if (err) throw err;
+      console.log('✅ Base de données:', this.dbPath);
+      this.createTables();
+      this.seedData();
+    });
   }
 
   createTables() {
-    // Créer les tables d'abord
     const tables = [
-      // Table des opérateurs
-      `CREATE TABLE IF NOT EXISTS operators (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )`,
-      
-      // Table des élèves
-      `CREATE TABLE IF NOT EXISTS students (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        class TEXT NOT NULL,
-        section TEXT NOT NULL,
-        school_year TEXT NOT NULL,
-        matricule TEXT UNIQUE,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )`,
-      
-      // Table des paiements
-      `CREATE TABLE IF NOT EXISTS payments (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        student_id INTEGER NOT NULL,
-        student_name TEXT NOT NULL,
-        class_name TEXT NOT NULL,
-        section TEXT NOT NULL,
-        school_year TEXT NOT NULL,
-        paid_amounts TEXT NOT NULL,
-        total_paid INTEGER NOT NULL,
-        receipt_number TEXT UNIQUE NOT NULL,
-        operator TEXT NOT NULL,
-        date DATETIME DEFAULT CURRENT_TIMESTAMP,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (student_id) REFERENCES students (id)
-      )`
+      `CREATE TABLE IF NOT EXISTS operators (id INTEGER PRIMARY KEY, name TEXT NOT NULL, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)`,
+      `CREATE TABLE IF NOT EXISTS students (id INTEGER PRIMARY KEY, name TEXT NOT NULL, class TEXT NOT NULL, section TEXT NOT NULL, school_year TEXT NOT NULL, matricule TEXT UNIQUE, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)`,
+      `CREATE TABLE IF NOT EXISTS payments (id INTEGER PRIMARY KEY, student_id INTEGER NOT NULL, student_name TEXT NOT NULL, class_name TEXT NOT NULL, section TEXT NOT NULL, school_year TEXT NOT NULL, paid_amounts TEXT NOT NULL, total_paid INTEGER NOT NULL, receipt_number TEXT UNIQUE NOT NULL, operator TEXT NOT NULL, date DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (student_id) REFERENCES students (id))`
     ];
-
-    // Créer les tables
-    tables.forEach(sql => {
-      this.db.run(sql, (err) => {
-        if (err) console.error('❌ Erreur création table:', err);
-      });
-    });
-
-    // Créer les index APRÈS les tables (avec un délai)
-    setTimeout(() => {
-      const indexes = [
-        'CREATE INDEX IF NOT EXISTS idx_students_name ON students(name)',
-        'CREATE INDEX IF NOT EXISTS idx_payments_student_id ON payments(student_id)'
-      ];
-
-      indexes.forEach(sql => {
-        this.db.run(sql, (err) => {
-          if (err) console.error('❌ Erreur création index:', err);
-        });
-      });
-    }, 200);
+    tables.forEach(sql => this.db.run(sql));
   }
 
   seedData() {
-    // Attendre que les tables soient créées
-    setTimeout(() => {
-      // Vérifier si un admin existe
-      this.db.get('SELECT COUNT(*) as count FROM operators WHERE email = ?', ['admin@ecole.com'], (err, row) => {
-        if (err) {
-          console.error('❌ Erreur vérification admin:', err);
-          return;
-        }
-        
-        if (!row || row.count === 0) {
-          this.db.run(
-            'INSERT INTO operators (name, email, password) VALUES (?, ?, ?)',
-            ['Administrateur', 'admin@ecole.com', 'admin123'],
-            function(err) {
-              if (err) {
-                // Ignorer l'erreur si l'admin existe déjà
-                if (err.code === 'SQLITE_CONSTRAINT') {
-                  console.log('👤 Opérateur admin existe déjà');
-                } else {
-                  console.error('❌ Erreur création admin:', err);
-                }
-              } else {
-                console.log('👤 Opérateur admin créé');
-              }
-            }
-          );
-        } else {
-          console.log('👤 Opérateur admin existe déjà');
-        }
-      });
-    }, 500);
-  }
-
-  /**
-   * Ferme proprement la connexion à la base de données
-   */
-  close() {
-    try {
-      if (this.db) {
-        this.db.close((err) => {
-          if (err) {
-            console.error('❌ Erreur fermeture SQLite:', err);
-          } else {
-            console.log('✅ Connexion SQLite fermée proprement');
-          }
-        });
-        this.db = null;
+    this.db.get('SELECT COUNT(*) as count FROM operators WHERE email = ?', ['admin'], (err, row) => {
+      if (!err && (!row || row.count === 0)) {
+        this.db.run('INSERT INTO operators (name, email, password) VALUES (?, ?, ?)', 
+          ['Administrateur', 'admin', 'admin123']);
       }
-    } catch (error) {
-      console.error('❌ Erreur lors de la fermeture SQLite:', error);
-    }
-  }
-
-  /**
-   * Vérifie si la base de données est ouverte
-   */
-  isOpen() {
-    return this.db !== null;
-  }
-
-  /**
-   * Exécute une requête avec promesse
-   */
-  runAsync(sql, params = []) {
-    return new Promise((resolve, reject) => {
-      this.db.run(sql, params, function(err) {
-        if (err) reject(err);
-        else resolve(this);
-      });
     });
   }
 
-  /**
-   * Récupère une ligne avec promesse
-   */
-  getAsync(sql, params = []) {
-    return new Promise((resolve, reject) => {
-      this.db.get(sql, params, (err, row) => {
-        if (err) reject(err);
-        else resolve(row);
-      });
-    });
-  }
+  // PROMESSES
+  runAsync(sql, params = []) { return new Promise((r, j) => this.db.run(sql, params, function(e) { e ? j(e) : r(this); })); }
+  getAsync(sql, params = []) { return new Promise((r, j) => this.db.get(sql, params, (e, row) => { e ? j(e) : r(row); })); }
+  allAsync(sql, params = []) { return new Promise((r, j) => this.db.all(sql, params, (e, rows) => { e ? j(e) : r(rows); })); }
 
-  /**
-   * Récupère plusieurs lignes avec promesse
-   */
-  allAsync(sql, params = []) {
-    return new Promise((resolve, reject) => {
-      this.db.all(sql, params, (err, rows) => {
-        if (err) reject(err);
-        else resolve(rows);
-      });
-    });
-  }
-
-  // ===== OPÉRATEURS =====
+  // OPÉRATEURS
   async getOperatorByEmail(email) {
-    try {
-      const operator = await this.getAsync('SELECT * FROM operators WHERE email = ?', [email]);
-      return JSON.parse(JSON.stringify(operator));
-    } catch (error) {
-      console.error('❌ Erreur getOperatorByEmail:', error);
-      throw error;
-    }
+    try { return await this.getAsync('SELECT * FROM operators WHERE email = ?', [email]); } 
+    catch (error) { console.error('❌ getOperatorByEmail:', error); throw error; }
   }
 
   async createOperator(name, email, password) {
     try {
-      const result = await this.runAsync(
-        'INSERT INTO operators (name, email, password) VALUES (?, ?, ?)',
-        [name, email, password]
-      );
+      const result = await this.runAsync('INSERT INTO operators (name, email, password) VALUES (?, ?, ?)', [name, email, password]);
       return { id: result.lastID, name, email };
-    } catch (error) {
-      console.error('❌ Erreur createOperator:', error);
-      throw error;
-    }
+    } catch (error) { console.error('❌ createOperator:', error); throw error; }
   }
 
-  // ===== ÉLÈVES =====
+  // ÉLÈVES
   async createStudent(name, class_, section, schoolYear, matricule) {
     try {
-      const result = await this.runAsync(
-        'INSERT INTO students (name, class, section, school_year, matricule) VALUES (?, ?, ?, ?, ?)',
-        [name, class_, section, schoolYear, matricule]
-      );
-      return { 
-        id: result.lastID, 
-        name, 
-        class: class_, 
-        section, 
-        schoolYear, 
-        matricule,
-        createdAt: new Date().toISOString()
-      };
-    } catch (error) {
-      console.error('❌ Erreur createStudent:', error);
-      throw error;
-    }
+      const result = await this.runAsync('INSERT INTO students (name, class, section, school_year, matricule) VALUES (?, ?, ?, ?, ?)', 
+        [name, class_, section, schoolYear, matricule]);
+      return { id: result.lastID, name, class: class_, section, schoolYear, matricule };
+    } catch (error) { console.error('❌ createStudent:', error); throw error; }
   }
 
   async getStudents() {
-    try {
-      const students = await this.allAsync('SELECT * FROM students ORDER BY created_at DESC');
-      return JSON.parse(JSON.stringify(students));
-    } catch (error) {
-      console.error('❌ Erreur getStudents:', error);
-      throw error;
-    }
+    try { return await this.allAsync('SELECT * FROM students ORDER BY created_at DESC'); } 
+    catch (error) { console.error('❌ getStudents:', error); throw error; }
   }
 
   async getStudent(id) {
-    try {
-      const student = await this.getAsync('SELECT * FROM students WHERE id = ?', [id]);
-      return JSON.parse(JSON.stringify(student));
-    } catch (error) {
-      console.error('❌ Erreur getStudent:', error);
-      throw error;
-    }
+    try { return await this.getAsync('SELECT * FROM students WHERE id = ?', [id]); } 
+    catch (error) { console.error('❌ getStudent:', error); throw error; }
   }
 
   async updateStudent(id, name, class_, section, schoolYear) {
     try {
-      const result = await this.runAsync(
-        'UPDATE students SET name = ?, class = ?, section = ?, school_year = ? WHERE id = ?',
-        [name, class_, section, schoolYear, id]
-      );
+      const result = await this.runAsync('UPDATE students SET name = ?, class = ?, section = ?, school_year = ? WHERE id = ?', 
+        [name, class_, section, schoolYear, id]);
       return result.changes > 0 ? { id, name, class: class_, section, schoolYear } : null;
-    } catch (error) {
-      console.error('❌ Erreur updateStudent:', error);
-      throw error;
-    }
+    } catch (error) { console.error('❌ updateStudent:', error); throw error; }
   }
 
   async deleteStudent(id) {
     try {
-      // Supprimer d'abord les paiements
       await this.runAsync('DELETE FROM payments WHERE student_id = ?', [id]);
-      
-      // Puis l'élève
       const result = await this.runAsync('DELETE FROM students WHERE id = ?', [id]);
       return result.changes > 0;
-    } catch (error) {
-      console.error('❌ Erreur deleteStudent:', error);
-      throw error;
-    }
+    } catch (error) { console.error('❌ deleteStudent:', error); throw error; }
   }
 
-  async searchStudents(query) {
-    try {
-      const students = await this.allAsync(
-        'SELECT * FROM students WHERE name LIKE ? OR matricule LIKE ? OR class LIKE ? ORDER BY name',
-        [`%${query}%`, `%${query}%`, `%${query}%`]
-      );
-      return JSON.parse(JSON.stringify(students));
-    } catch (error) {
-      console.error('❌ Erreur searchStudents:', error);
-      throw error;
-    }
-  }
-
-  // ===== PAIEMENTS =====
+  // PAIEMENTS
   async createPayment(studentId, studentName, className, section, schoolYear, paidAmounts, totalPaid, receiptNumber, operator) {
     try {
-      const paidAmountsStr = JSON.stringify(paidAmounts);
       const result = await this.runAsync(
-        `INSERT INTO payments (student_id, student_name, class_name, section, school_year, paid_amounts, total_paid, receipt_number, operator)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [studentId, studentName, className, section, schoolYear, paidAmountsStr, totalPaid, receiptNumber, operator]
+        `INSERT INTO payments (student_id, student_name, class_name, section, school_year, paid_amounts, total_paid, receipt_number, operator) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [studentId, studentName, className, section, schoolYear, JSON.stringify(paidAmounts), totalPaid, receiptNumber, operator]
       );
-      
-      return { 
-        id: result.lastID,
-        studentId,
-        studentName,
-        className,
-        section,
-        schoolYear,
-        paidAmounts,
-        totalPaid,
-        receiptNumber,
-        operator,
-        date: new Date().toISOString()
-      };
-    } catch (error) {
-      console.error('❌ Erreur createPayment:', error);
-      throw error;
-    }
+      return { id: result.lastID, studentId, studentName, className, section, schoolYear, paidAmounts, totalPaid, receiptNumber, operator };
+    } catch (error) { console.error('❌ createPayment:', error); throw error; }
   }
 
   async getStudentPayments(studentId) {
     try {
-      const payments = await this.allAsync(
-        'SELECT * FROM payments WHERE student_id = ? ORDER BY date DESC',
-        [studentId]
-      );
-      const cleanedPayments = payments.map(payment => ({
-        ...JSON.parse(JSON.stringify(payment)),
-        paidAmounts: JSON.parse(payment.paid_amounts)
-      }));
-      return cleanedPayments;
-    } catch (error) {
-      console.error('❌ Erreur getStudentPayments:', error);
-      throw error;
-    }
+      const payments = await this.allAsync('SELECT * FROM payments WHERE student_id = ? ORDER BY date DESC', [studentId]);
+      return payments.map(p => ({ ...p, paidAmounts: JSON.parse(p.paid_amounts) }));
+    } catch (error) { console.error('❌ getStudentPayments:', error); throw error; }
   }
 
   async getAllPayments() {
     try {
-      const payments = await this.allAsync(`
-        SELECT p.*, s.matricule 
-        FROM payments p 
-        LEFT JOIN students s ON p.student_id = s.id 
-        ORDER BY p.date DESC
-      `);
-      
-      const cleanedPayments = payments.map(payment => ({
-        ...JSON.parse(JSON.stringify(payment)),
-        paidAmounts: JSON.parse(payment.paid_amounts)
-      }));
-      return cleanedPayments;
-    } catch (error) {
-      console.error('❌ Erreur getAllPayments:', error);
-      throw error;
-    }
+      const payments = await this.allAsync('SELECT p.*, s.matricule FROM payments p LEFT JOIN students s ON p.student_id = s.id ORDER BY p.date DESC');
+      return payments.map(p => ({ ...p, paidAmounts: JSON.parse(p.paid_amounts) }));
+    } catch (error) { console.error('❌ getAllPayments:', error); throw error; }
   }
 
   async deletePayment(id) {
     try {
       const result = await this.runAsync('DELETE FROM payments WHERE id = ?', [id]);
       return result.changes > 0;
-    } catch (error) {
-      console.error('❌ Erreur deletePayment:', error);
-      throw error;
-    }
+    } catch (error) { console.error('❌ deletePayment:', error); throw error; }
+  }
+
+  close() {
+    if (this.db) this.db.close();
   }
 }
 

@@ -1,3 +1,37 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // import React, { useState, useEffect } from 'react'
 // import { User, Calendar, DollarSign, FileText, ArrowLeft, Edit, Trash2, Plus, CheckCircle, Clock } from 'lucide-react'
 // import { formatCurrency, formatDate, formatTime } from '../lib/format'
@@ -59,10 +93,11 @@
 //     }
 //   }
 
-//   // CORRECTION: Calculer correctement les montants déjà payés par type de frais
+//   // CORRECTION: Ajouter fraisAnnexes dans les calculs
 //   const getAlreadyPaidAmounts = () => {
 //     const alreadyPaid = {
 //       inscription: 0,
+//       fraisAnnexes: 0, // AJOUT
 //       pension_0: 0,
 //       pension_1: 0,
 //       pension_2: 0
@@ -71,6 +106,7 @@
 //     payments.forEach(payment => {
 //       if (payment.paidAmounts) {
 //         alreadyPaid.inscription += payment.paidAmounts.inscription || 0
+//         alreadyPaid.fraisAnnexes += payment.paidAmounts.fraisAnnexes || 0 // AJOUT
 //         alreadyPaid.pension_0 += payment.paidAmounts.pension_0 || 0
 //         alreadyPaid.pension_1 += payment.paidAmounts.pension_1 || 0
 //         alreadyPaid.pension_2 += payment.paidAmounts.pension_2 || 0
@@ -101,10 +137,12 @@
 //     const fees = getFees(student.section, student.class)
 //     if (!fees) return 0
 
+//     // CORRECTION: Inclure fraisAnnexes dans le calcul
 //     const inscription = fees.inscription || 0
+//     const fraisAnnexes = fees.fraisAnnexes || 0
 //     const pensionTotal = fees.pension ? fees.pension.reduce((sum, item) => sum + (item.amount || 0), 0) : 0
     
-//     return inscription + pensionTotal
+//     return inscription + fraisAnnexes + pensionTotal
 //   }
 
 //   const calculateRemaining = () => {
@@ -243,6 +281,7 @@
 //                 <div className="fee-summary">
 //                   <span className="fee-label">Frais: </span>
 //                   Inscription: {formatCurrency(feeDetails.inscription)} + 
+//                   Frais annexes: {formatCurrency(feeDetails.fraisAnnexes || 0)} + 
 //                   {feeDetails.pension?.map((item, index) => (
 //                     <span key={index}> {item.tranche}: {formatCurrency(item.amount)}{index < feeDetails.pension.length - 1 ? ' +' : ''}</span>
 //                   ))}
@@ -458,6 +497,11 @@
 //                               Inscription: {formatCurrency(payment.paidAmounts.inscription)}
 //                             </span>
 //                           )}
+//                           {payment.paidAmounts?.fraisAnnexes > 0 && (
+//                             <span className="detail-badge frais-annexes">
+//                               Frais annexes: {formatCurrency(payment.paidAmounts.fraisAnnexes)}
+//                             </span>
+//                           )}
 //                           {payment.paidAmounts && Object.keys(payment.paidAmounts)
 //                             .filter(key => key.startsWith('pension_'))
 //                             .map((key, index) => (
@@ -591,8 +635,17 @@
 
 
 
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from 'react'
-import { User, Calendar, DollarSign, FileText, ArrowLeft, Edit, Trash2, Plus, CheckCircle, Clock } from 'lucide-react'
+import { User, Calendar, DollarSign, FileText, ArrowLeft, Edit, Trash2, Plus, CheckCircle, Clock, Globe, BookOpen } from 'lucide-react'
 import { formatCurrency, formatDate, formatTime } from '../lib/format'
 import { getFees } from '../lib/fees'
 import '../Styles/StudentDetail.css'
@@ -608,11 +661,9 @@ export function StudentDetail({ student, navigateTo, onContinuePayment }) {
     schoolYear: ''
   })
 
-
-      useEffect(() =>{
-        window.scrollTo(0,0)
-      },[])
-    
+  useEffect(() => {
+    window.scrollTo(0,0)
+  },[])
 
   const getStudentSchoolYear = (studentOrForm) => {
     const currentYear = new Date().getFullYear();
@@ -652,11 +703,10 @@ export function StudentDetail({ student, navigateTo, onContinuePayment }) {
     }
   }
 
-  // CORRECTION: Ajouter fraisAnnexes dans les calculs
   const getAlreadyPaidAmounts = () => {
     const alreadyPaid = {
       inscription: 0,
-      fraisAnnexes: 0, // AJOUT
+      fraisAnnexes: 0,
       pension_0: 0,
       pension_1: 0,
       pension_2: 0
@@ -665,7 +715,7 @@ export function StudentDetail({ student, navigateTo, onContinuePayment }) {
     payments.forEach(payment => {
       if (payment.paidAmounts) {
         alreadyPaid.inscription += payment.paidAmounts.inscription || 0
-        alreadyPaid.fraisAnnexes += payment.paidAmounts.fraisAnnexes || 0 // AJOUT
+        alreadyPaid.fraisAnnexes += payment.paidAmounts.fraisAnnexes || 0
         alreadyPaid.pension_0 += payment.paidAmounts.pension_0 || 0
         alreadyPaid.pension_1 += payment.paidAmounts.pension_1 || 0
         alreadyPaid.pension_2 += payment.paidAmounts.pension_2 || 0
@@ -675,7 +725,6 @@ export function StudentDetail({ student, navigateTo, onContinuePayment }) {
     return alreadyPaid
   }
 
-  // CORRECTION: Calculer le montant total d'un paiement spécifique
   const calculatePaymentTotal = (payment) => {
     if (!payment.paidAmounts) return 0;
     
@@ -684,7 +733,6 @@ export function StudentDetail({ student, navigateTo, onContinuePayment }) {
     }, 0);
   }
 
-  // CORRECTION: Calculer le total payé à partir des paidAmounts, pas de totalPaid
   const calculateTotalPaid = () => {
     const alreadyPaid = getAlreadyPaidAmounts();
     return Object.values(alreadyPaid).reduce((sum, amount) => sum + amount, 0);
@@ -696,7 +744,6 @@ export function StudentDetail({ student, navigateTo, onContinuePayment }) {
     const fees = getFees(student.section, student.class)
     if (!fees) return 0
 
-    // CORRECTION: Inclure fraisAnnexes dans le calcul
     const inscription = fees.inscription || 0
     const fraisAnnexes = fees.fraisAnnexes || 0
     const pensionTotal = fees.pension ? fees.pension.reduce((sum, item) => sum + (item.amount || 0), 0) : 0
@@ -779,7 +826,6 @@ export function StudentDetail({ student, navigateTo, onContinuePayment }) {
   const totalPaid = calculateTotalPaid();
   const remaining = calculateRemaining();
   const isFullyPaid = remaining <= 0;
-  const progressPercentage = totalFees > 0 ? Math.min(100, (totalPaid / totalFees) * 100) : 0;
 
   if (!student) {
     return (
@@ -803,11 +849,28 @@ export function StudentDetail({ student, navigateTo, onContinuePayment }) {
         <div className="header-content">
           <div className="student-info-main">
             <div className="student-avatar-large">
-              <User className="avatar-icon-large" />
+              {student.section === 'im1' ? (
+                <BookOpen className="avatar-icon-large" />
+              ) : (
+                <Globe className="avatar-icon-large" />
+              )}
             </div>
             <div className="student-details-main">
               <div className="student-name-header">
                 <h1 className="student-name-title">{student.name}</h1>
+                <div className="student-section-badge">
+                  {student.section === 'im1' ? (
+                    <span className="section-badge francophone">
+                      <BookOpen className="section-badge-icon" />
+                      Section francophone
+                    </span>
+                  ) : (
+                    <span className="section-badge anglophone">
+                      <Globe className="section-badge-icon" />
+                      Section anglophone
+                    </span>
+                  )}
+                </div>
                 {isFullyPaid && (
                   <div className="student-status-badge fully-paid">
                     <CheckCircle className="status-icon" />
@@ -825,10 +888,6 @@ export function StudentDetail({ student, navigateTo, onContinuePayment }) {
                 <div className="meta-item">
                   <span className="meta-label">Matricule:</span>
                   {student.matricule || 'N/A'}
-                </div>
-                <div className="meta-item">
-                  <span className="meta-label">Section:</span>
-                  {student.section === 'im1' ? 'Francophone' : 'Anglophone'}
                 </div>
                 <div className="meta-item">
                   <Calendar className="meta-icon" />
@@ -1034,7 +1093,6 @@ export function StudentDetail({ student, navigateTo, onContinuePayment }) {
               </thead>
               <tbody className="table-body">
                 {payments.map((payment) => {
-                  // CORRECTION: Calculer le montant réel du paiement
                   const paymentTotal = calculatePaymentTotal(payment);
                   
                   return (
